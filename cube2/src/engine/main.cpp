@@ -143,7 +143,7 @@ void restorebackground()
 
 void renderbackground(const char *caption, Texture *mapshot, const char *mapname, const char *mapinfo, bool restore, bool force)
 {
-#if EMSCRIPTEN
+#if __EMSCRIPTEN__
     return;
 #endif
 
@@ -325,7 +325,7 @@ float loadprogress = 0;
 
 void renderprogress(float bar, const char *text, GLuint tex, bool background)   // also used during loading
 {
-#if EMSCRIPTEN
+#if __EMSCRIPTEN__
     return;
 #endif
 
@@ -587,7 +587,7 @@ void setupscreen(int &usedcolorbits, int &useddepthbits, int &usedfsaa)
         }
         if(dbgmodes) conoutf(CON_DEBUG, "selected %d x %d", scr_w, scr_h);
     }
-#if !EMSCRIPTEN
+#if !__EMSCRIPTEN__
     if(scr_w < 0 && scr_h < 0) { scr_w = SCR_DEFAULTW; scr_h = SCR_DEFAULTH; }
     else if(scr_w < 0) scr_w = (scr_h*SCR_DEFAULTW)/SCR_DEFAULTH;
     else if(scr_h < 0) scr_h = (scr_w*SCR_DEFAULTH)/SCR_DEFAULTW;
@@ -601,7 +601,7 @@ void setupscreen(int &usedcolorbits, int &useddepthbits, int &usedfsaa)
         hasbpp = SDL_VideoModeOK(scr_w, scr_h, colorbits, SDL_OPENGL|flags)==colorbits;
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-#if SDL_VERSION_ATLEAST(1, 2, 11) && !EMSCRIPTEN
+#if SDL_VERSION_ATLEAST(1, 2, 11) && !__EMSCRIPTEN__
     if(vsync>=0) SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, vsync);
 #endif
     static int configs[] =
@@ -785,7 +785,7 @@ static void ignoremousemotion()
 {
     SDL_Event e;
     SDL_PumpEvents();
-#if !EMSCRIPTEN
+#if !__EMSCRIPTEN__
     while(SDL_PeepEvents(&e, 1, SDL_GETEVENT, SDL_EVENTMASK(SDL_MOUSEMOTION)));
 #else
     while(SDL_PeepEvents(&e, 1, SDL_GETEVENT, SDL_MOUSEMOTION, SDL_MOUSEMOTION));
@@ -1020,7 +1020,7 @@ static char *load = NULL, *initscript = NULL;
 
 int main(int argc, char **argv)
 {
-#if EMSCRIPTEN
+#if __EMSCRIPTEN__
     emscripten_hide_mouse(); // we render our own cursor
     // Debugging: Start logging to off
     //emscripten_run_script("GL.debug = Runtime.debug = false;");
@@ -1146,7 +1146,7 @@ int main(int argc, char **argv)
     inbetweenframes = true;
     renderbackground("starting..."); //"initializing...");
 
-#if EMSCRIPTEN
+#if __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop_caller, 0, 0);
     emscripten_set_main_loop_expected_blockers(28);
 #endif
@@ -1189,7 +1189,7 @@ void main3(void *arg)
         execfile(game::defaultconfig());
         writecfg(game::restoreconfig());
     }
-#if !EMSCRIPTEN
+#if !__EMSCRIPTEN__
     execfile(game::autoexec(), false);
 #else
     emscripten_run_script("Module['autoexec']()");
@@ -1219,7 +1219,7 @@ void main3(void *arg)
 
     if(initscript) execute(initscript);
 
-#if EMSCRIPTEN
+#if __EMSCRIPTEN__
     emscripten_run_script("Module['setPlayerModels']()");
     emscripten_run_script("Module['loadDefaultMap']()");
 #else
@@ -1236,7 +1236,7 @@ void main3(void *arg)
     inputgrab(grabinput = true);
     ignoremousemotion();
 
-#if !EMSCRIPTEN
+#if !__EMSCRIPTEN__
     for(;;) main_loop_caller(); // otherwise in emscripten we already set the main loop
 #endif
 }
@@ -1246,7 +1246,7 @@ static int millis, frames = 0;
 void main_loop_caller()
 {
         millis = getclockmillis();
-#if !EMSCRIPTEN
+#if !__EMSCRIPTEN__
         int delay = limitfps(millis, totalmillis);
         if (delay > 0) SDL_Delay(delay);
 #endif

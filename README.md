@@ -11,7 +11,7 @@ See the **[FAQ](https://github.com/kripken/BananaBread/wiki/FAQ)**.
 Demos
 -----
 
-**[A live demo is available](https://kripken.github.io/BananaBread/cube2/index.html)**.
+**[A live demo is available](https://kripken.github.io/BananaBread/cube2/bb.html)**. Note that it requires [WebAssembly](http://webassembly.org/).
 
 
 Overview
@@ -60,13 +60,15 @@ Build in crnlib using the Makefile. You can disable
 crunch if you don't want it, remove all mentions of crunch in
 `cube2/src/web/Makefile`.
 
-Then do `make` in `cube2/src/web` for a web build. You can also do `make` in
-`cube2/src/native` for a native linux build.
+Then do `emmake make` in `cube2/src/web` for a web build. (You can also do
+`make` in `cube2/src/native` for a native linux build.)
+
+You can then run bb.html to see the output.
 
 If you have any problems building, feel free to file an issue here or to
 find us on emscripten IRC (see [emscripten site](http://emscripten.org)).
 
-See needed.txt for some possibly useful scripts to package the output.
+ * See needed.txt for some possibly useful scripts to package the output.
 
 
 Running
